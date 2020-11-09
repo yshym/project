@@ -1,0 +1,8 @@
+# byte-compiled files
+__pycache__/
+
+# distribution
+dist/
+
+# direnv
+.envrc
