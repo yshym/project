@@ -13,5 +13,6 @@ def config():
     except FileNotFoundError:
         print(f"Config file '{CONFIG_PATH}' does not exist", file=sys.stderr)
 
+
 if __name__ == "__main__":
     print(config())
