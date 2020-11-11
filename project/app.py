@@ -11,6 +11,8 @@ app = typer.Typer()
 
 @app.command()
 def links(name: Optional[str] = typer.Argument(None)):
+    """Open links"""
+
     config = parse_config()
 
     if not config:
@@ -33,4 +35,6 @@ def links(name: Optional[str] = typer.Argument(None)):
 
 @app.command()
 def services(name: Optional[str] = typer.Argument(None)):
+    """Check services"""
+
     pass
