@@ -10,6 +10,18 @@ app = typer.Typer()
 
 
 @app.command()
+def list():
+    """List projects"""
+
+    config = parse_config()
+
+    if not config:
+        return
+
+    print("\n".join(f"· {k}" for k in config.get("projects").keys()))
+
+
+@app.command()
 def links(name: Optional[str] = typer.Argument(None)):
     """Open links"""
 
