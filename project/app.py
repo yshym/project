@@ -1,8 +1,10 @@
+import subprocess
 import sys
 import webbrowser
 from typing import Optional
 
 import typer
+from colorama import Fore
 
 from project.config import config as parse_config
 
@@ -21,10 +23,7 @@ def list():
     print("\n".join(f"· {k}" for k in config.get("projects").keys()))
 
 
-@app.command()
-def links(name: Optional[str] = typer.Argument(None)):
-    """Open links"""
-
+def get_project(name):
     config = parse_config()
 
     if not config:
@@ -33,10 +32,17 @@ def links(name: Optional[str] = typer.Argument(None)):
     default = config.get("default")
     projects = config.get("projects")
 
-    project = projects.get(name if name else default)
+    return projects.get(name if name else default)
+
+
+@app.command()
+def links(name: Optional[str] = typer.Argument(None)):
+    """Open links"""
+
+    project = get_project(name)
 
     if not project:
-        print(f"Project '{name}' does not exist", file=sys.stderr)
+        print(f"{Fore.RED}Project '{name}' does not exist", file=sys.stderr)
         return
 
     links = project.get("links")
@@ -49,4 +55,16 @@ def links(name: Optional[str] = typer.Argument(None)):
 def services(name: Optional[str] = typer.Argument(None)):
     """Check services"""
 
-    pass
+    project = get_project(name)
+    services = project.get("services")
+
+    for s in services:
+        service_is_running = not bool(
+            subprocess.run(["pgrep", s], stdout=subprocess.DEVNULL).returncode
+        )
+        running_text = f"{Fore.GREEN}running"
+        not_running_text = f"{Fore.RED}not running"
+
+        print(
+            f"{s} - {running_text if service_is_running else not_running_text}"
+        )
