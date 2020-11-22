@@ -8,6 +8,7 @@ import typer
 from colorama import Fore
 
 from project.config import config as parse_config
+from project.utils import print_error
 
 app = typer.Typer()
 
@@ -43,10 +44,16 @@ def links(name: Optional[str] = typer.Argument(None)):
     project = get_project(name)
 
     if not project:
-        print(f"{Fore.RED}Project '{name}' does not exist", file=sys.stderr)
+        print_error(f"Project '{name}' does not exist")
         return
 
     links = project.get("links")
+
+    if not links:
+        print_error(
+            f"You have not added links of '{name}' to the config file",
+        )
+        return
 
     for l in links:
         webbrowser.open(l)
@@ -58,6 +65,12 @@ def services(name: Optional[str] = typer.Argument(None)):
 
     project = get_project(name)
     services = project.get("services")
+
+    if not services:
+        print_error(
+            f"You have not added services of '{name}' to the config file",
+        )
+        return
 
     for s in services:
         service_is_running = not bool(
@@ -79,9 +92,8 @@ def code(name: Optional[str] = typer.Argument(None)):
     path = project.get("path")
 
     if not path:
-        print(
-            f"{Fore.RED}You have not added the path to '{name}' to the config file",
-            file=sys.stderr,
+        print_error(
+            f"You have not added the path to '{name}' to the config file",
         )
         return
 
