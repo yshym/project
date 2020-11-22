@@ -34,14 +34,17 @@ def get_project(name):
     default = config.get("default")
     projects = config.get("projects")
 
-    return projects.get(name if name else default)
+    if not name:
+        name = default
+
+    return name, projects.get(name)
 
 
 @app.command()
 def links(name: Optional[str] = typer.Argument(None)):
     """Open links"""
 
-    project = get_project(name)
+    name, project = get_project(name)
 
     if not project:
         print_error(f"Project '{name}' does not exist")
@@ -63,7 +66,12 @@ def links(name: Optional[str] = typer.Argument(None)):
 def services(name: Optional[str] = typer.Argument(None)):
     """Check services"""
 
-    project = get_project(name)
+    name, project = get_project(name)
+
+    if not project:
+        print_error(f"Project '{name}' does not exist")
+        return
+
     services = project.get("services")
 
     if not services:
@@ -88,7 +96,12 @@ def services(name: Optional[str] = typer.Argument(None)):
 def code(name: Optional[str] = typer.Argument(None)):
     """Open code"""
 
-    project = get_project(name)
+    name, project = get_project(name)
+
+    if not project:
+        print_error(f"Project '{name}' does not exist")
+        return
+
     path = project.get("path")
 
     if not path:
