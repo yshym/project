@@ -1,6 +1,7 @@
 import subprocess
 import sys
 import webbrowser
+from os import getenv
 from typing import Optional
 
 import typer
@@ -68,3 +69,20 @@ def services(name: Optional[str] = typer.Argument(None)):
         print(
             f"{s} - {running_text if service_is_running else not_running_text}"
         )
+
+
+@app.command()
+def code(name: Optional[str] = typer.Argument(None)):
+    """Open code"""
+
+    project = get_project(name)
+    path = project.get("path")
+
+    if not path:
+        print(
+            f"{Fore.RED}You have not added the path to '{name}' to the config file",
+            file=sys.stderr,
+        )
+        return
+
+    subprocess.run([getenv("EDITOR"), path])
