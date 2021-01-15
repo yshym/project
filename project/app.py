@@ -22,7 +22,12 @@ def list():
     if not config:
         return
 
-    print("\n".join(f"· {k}" for k in config.get("projects").keys()))
+    print(
+        "\n".join(
+            f"· {k} {'✔' if k == config.get('default') else ''}"
+            for k in config.get("projects").keys()
+        )
+    )
 
 
 def get_project(name):
