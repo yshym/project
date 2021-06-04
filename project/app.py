@@ -89,8 +89,8 @@ def services(name: Optional[str] = typer.Argument(None)):
         service_is_running = not bool(
             subprocess.run(["pgrep", s], stdout=subprocess.DEVNULL).returncode
         )
-        running_text = f"{Fore.GREEN}running"
-        not_running_text = f"{Fore.RED}not running"
+        running_text = f"{Fore.GREEN}running{Fore.RESET}"
+        not_running_text = f"{Fore.RED}not running{Fore.RESET}"
 
         print(
             f"{s} - {running_text if service_is_running else not_running_text}"
